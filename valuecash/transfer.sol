@@ -13,7 +13,7 @@ contract TokenERC20 {
     uint256 public miner_reward;
     uint256 public developer_reward;
     address public miner;
-        address public msg_owner=0x1f792f611a644bb0a1e737298534552ba03aa98e;
+        address public msg_owner=0x75710d44b1ba99b8ff804e4eaa590d309daebc28;
     uint8 public decimals = 18;
     
 
@@ -53,7 +53,7 @@ contract TokenERC20 {
     uint256 seller_reward_amount,
     uint256 developer_reward_amount,
     uint256 miner_reward_amount,
-    unit time,
+    uint256 time,
     string product
     );
  
@@ -63,11 +63,7 @@ contract TokenERC20 {
      *
      * Initializes contract with initial supply tokens to the creator of the contract
      */
-    //Loglist loglist;
-    //Loglist loglist;
-
-    //mapping (uint => Loglist) allloglist;
-   // mapping(uint => Loglist) public allloglist;
+   
     
     Loglist[] public allloglist;
     //mapping (address => Loglist) public allloglist;
@@ -119,20 +115,20 @@ contract TokenERC20 {
         //5:2:1:2 ->5 buyer,2->seller,1-miner,2-developer 
         reward_value =_value/100*10;
         
-        seller_reward=reward_value/100*2;
+        seller_reward=(reward_value*2)/10;
         balanceOf[msg_owner] -=seller_reward;
         balanceOf[_to] +=seller_reward;
         
         
-        buyer_reward=reward_value/100*5;
+        buyer_reward=(reward_value*5)/10;
         balanceOf[msg_owner] -=buyer_reward;
         balanceOf[msg.sender] +=buyer_reward;
        
         miner=block.coinbase;
-        miner_reward=reward_value/100*1;
+        miner_reward=(reward_value*1)/10;
         balanceOf[msg_owner] -=miner_reward;
         balanceOf[miner]  +=miner_reward;
-        developer_reward=reward_value/100*2;
+        developer_reward=(reward_value*2)/10;
         
         
         allloglist.push(Loglist({
@@ -144,7 +140,7 @@ contract TokenERC20 {
             total_reward_amount:reward_value,
             buyer_reward_amount:buyer_reward,
             seller_reward_amount:seller_reward,
-            deverloper_reward_amount:12,
+            deverloper_reward_amount:developer_reward,
             miner_reward_amount:miner_reward,
             time:now,
             product:"tesging"
@@ -152,24 +148,43 @@ contract TokenERC20 {
 
         //userStructs[userAddress].userEmail = userEmail;
     //userStructs[userAddress].userAge   = userAge;
-         event Log_Transfer(address msg.sender, address _to, address msg_owner, address msg.sender,
-    uint256 _value,
-    uint256 reward_value,
-    uint256 buyer_reward,
-    uint256 seller_reward,
-    uint256 12,
-    uint256 miner_reward,
-    unit now,
-    string "testing"
-    );  
+     Log_Transfer(
+        msg.sender,
+        _to,
+        msg_owner,
+        msg.sender,
+        _value,
+        reward_value,
+        buyer_reward,
+        seller_reward,
+        12,
+        miner_reward,
+        now,
+        "testing"
+        );  
       
     
  
 
 }
   
-    function get_transaction() constant returns (uint[]) {
-      return Loglist.length;
+    function get_transaction_count() view public returns (uint) {
+      return allloglist.length;
+     // return 100;
+    }
+    function get_transaction_details(uint transaction_no) view public 
+        returns ( address , address,address,uint256,uint256,uint256,uint256) {
+      return (
+            allloglist[transaction_no-1].buyer,
+            allloglist[transaction_no-1].seller,
+            allloglist[transaction_no-1].miner,
+            allloglist[transaction_no-1].purchase_amount,
+            allloglist[transaction_no-1].miner_reward_amount,
+            allloglist[transaction_no-1].buyer_reward_amount,
+            allloglist[transaction_no-1].seller_reward_amount
+          
+          );
+     // return 100;
     }
     /**
      * Transfer tokens from other address
@@ -253,3 +268,4 @@ contract TokenERC20 {
         return true;
     }
 }
+
